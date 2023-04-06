@@ -15,7 +15,7 @@ class MovieListUITests: XCTestCase {
     private (set) var viewController = MovieViewController()
     
     func testMovieViewController() {
-        let frame = CGRect(x: 0, y: 0, width: 375, height: 667)
+        let frame = CGRect(x: 0, y: 0, width: 375, height: 667) // что-то он не сработал😅
         viewController.view.frame = frame
         testNoDataState()
         testLoadingState()

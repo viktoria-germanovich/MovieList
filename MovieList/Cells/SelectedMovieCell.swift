@@ -11,11 +11,11 @@ import SDWebImage
 class SelectedMovieCell: UITableViewCell {
     
     //MARK: - Static properties
-    static var reuseId = "SelectedMovieCell"
+    static var reuseId = "SelectedMovieCell" //можно через название класса сделать
     
     //MARK: - Constants
     private enum Constants {
-        static let overviewTitle = "Overview"
+        static let overviewTitle = "Overview" //можно вынести в локализацию или в глобальные переменные
     }
     
     //MARK: - Properties
