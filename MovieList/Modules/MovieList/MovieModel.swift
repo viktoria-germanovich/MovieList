@@ -5,7 +5,7 @@
 //  Created by Viktoryia Hermanovich on 26.03.23.
 //
 
-import Foundation
+import Foundation // почему не отдельные файлы?
 
 struct MovieResults: Codable, Equatable {
     let page: Int
@@ -33,7 +33,7 @@ struct Movie: Codable, Hashable, Identifiable {
     let voteAverage: Double
     
     var posterURL: URL? {
-        return posterPath.map {"https://image.tmdb.org/t/p/w154\($0)"}.flatMap(URL.init(string:))
+        return posterPath.map {"https://image.tmdb.org/t/p/w154\($0)"}.flatMap(URL.init(string:)) // почему это тут?
     }
     
     enum CodingKeys: String, CodingKey {

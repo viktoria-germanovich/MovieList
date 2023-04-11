@@ -12,7 +12,7 @@ import SDWebImage
 class MovieCell: UITableViewCell {
     
     //MARK: - Static properties
-    static var reuseId = "MovieCell"
+    static var reuseId = "MovieCell"//можно через название класса сделать
     
     //MARK: - Private properties
     private lazy var infoStackView: UIStackView = {
@@ -26,7 +26,7 @@ class MovieCell: UITableViewCell {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
-        imageView.image = UIImage(named: "noImage")
+        imageView.image = UIImage(named: "noImage") // можно через литерал
         return imageView
     }()
     
@@ -64,7 +64,7 @@ class MovieCell: UITableViewCell {
     }
     
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        fatalError("init(coder:) has not been implemented") // можно вынести в глобальную ошибку
     }
     
     //MARK: - Private functions

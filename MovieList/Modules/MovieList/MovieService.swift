@@ -15,7 +15,7 @@ protocol MovieServiceProtocol {
 final class MovieService: MovieServiceProtocol {
     
     //MARK: - Constants
-    private struct Constants {
+    private struct Constants { //зачем это тут?
         static let scheme = "https"
         static let host = "api.themoviedb.org"
         static let searchPath = "/3/search/movie"
