@@ -16,11 +16,11 @@ enum Endpoint: EndpointBuilder {
     // MARK: - Constants
     private enum Constants {
         enum Base {
-            static let scheme: String = "https"
-            static let host: String = "api.themoviedb.org"
+            static let scheme = "https"
+            static let host = "api.themoviedb.org"
         }
         enum Path {
-            static let searchPath: String = "/3/search/movie"
+            static let searchPath = "/3/search/movie"
             static let discoverPath = "/3/discover/movie"
         }
         enum Parameter {
