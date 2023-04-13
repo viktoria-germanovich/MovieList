@@ -9,35 +9,35 @@ import iOSSnapshotTestCase
 import MovieList
 
 class MovieListUITests: FBSnapshotTestCase {
-
+    
     private (set) var viewController: MovieViewController!
-
+    
     // MARK: - Lifecycle
     override func setUp() {
-       super.setUp()
+        super.setUp()
         //recordMode = true
     }
-
+    
     override func setUpWithError() throws {
         try super.setUpWithError()
         viewController = MovieViewController()
     }
-
+    
     //MARK: - Tests
     func testNoDataState() {
-
+        
         // Given
         let state = MovieState.initial
-
+        
         // When
         viewController.update(with: state)
-
+        
         // Then
         FBSnapshotVerifyViewController(viewController)
     }
-
+    
     func testLoadedState() {
-
+        
         // Given
         let movies = [
             Movie(
@@ -55,15 +55,15 @@ class MovieListUITests: FBSnapshotTestCase {
         ]
         let state = MovieState(
             status: MovieState.Status.loaded,
-            batch: MovieResults(page: MovieState.firstPage, results: movies),
+            batch: MovieResults(page: MovieState.firstPage, results: movies, totalPages: 0),
             movies: movies,
             query: "",
             nextPage:MovieState.firstPage
         )
-
+        
         // When
         viewController.update(with: state)
-
+        
         // Then
         FBSnapshotVerifyViewController(viewController)
     }

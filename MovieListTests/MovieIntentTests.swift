@@ -55,7 +55,8 @@ class MovieIntentTests: XCTestCase {
                 overview: "Test overview",
                 title: "Test movie",
                 posterPath: "Test poster",
-                voteAverage: 1.0)]))
+                voteAverage: 1.0)],
+                totalPages: 0))
         let event: MovieEvent = .didLoad(results)
         
         // When
