@@ -18,20 +18,13 @@ class MovieViewController: UIViewController, MovieListDisplay {
     
     //MARK: - Constants
     private struct Constants {
-        static let title = "Movies"
         static let searchKey = "searchField"
-        static let noDataImage = "nodata"
     }
     
     //MARK: - Properties
     private var movies: [Movie] = []
     private let intent = MovieIntent()
-    private let initialState = MovieState(
-        selectedMovie: nil,
-        status: .loading,
-        movies: [],
-        query: ""
-    )
+    private let initialState = MovieState.initial
     private var store: Store<MovieState,MovieEvent>?
     
     private lazy var searchBar: UISearchController = {
@@ -45,17 +38,17 @@ class MovieViewController: UIViewController, MovieListDisplay {
         tableView.dataSource = self
         tableView.delegate = self
         tableView.backgroundColor = .clear
-        tableView.register(MovieCell.self, forCellReuseIdentifier: MovieCell.reuseId)
+        tableView.register(MovieCell.self, forCellReuseIdentifier: String(describing: MovieCell.self))
         tableView.allowsSelection = true
         tableView.separatorColor = .gray
         return tableView
     }()
-
+    
     private lazy var noDataImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
-        imageView.image = UIImage(named: Constants.noDataImage)
+        imageView.image = .noImage
         return imageView
     }()
     
@@ -78,7 +71,7 @@ class MovieViewController: UIViewController, MovieListDisplay {
         navigationController?.navigationBar.tintColor = .orange
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
         navigationItem.searchController = searchBar
-        navigationItem.title = Constants.title
+        navigationItem.title = MovieConstants.appTitle
         if let textField = searchBar.searchBar.value(forKey: Constants.searchKey) as? UITextField {
             textField.textColor = .white
         }
@@ -130,15 +123,15 @@ extension MovieViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: MovieCell.reuseId, for: indexPath) as? MovieCell else {
+        guard let cell = tableView.dequeueReusableCell(
+            withIdentifier: String(describing: MovieCell.self),
+            for: indexPath
+        ) as? MovieCell else {
             return UITableViewCell()
         }
         cell.accessoryType = .disclosureIndicator
+        cell.selectionStyle = .none
         cell.backgroundColor = .clear
-        let backView = UIView()
-        backView.backgroundColor = .orange
-        cell.selectedBackgroundView = backView
-        
         cell.configure(with: movies[indexPath.row])
         return cell
     }
@@ -148,6 +141,15 @@ extension MovieViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
         store?.send(event: .select(movies[indexPath.row]))
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        guard let store = store else {
+            return
+        }
+        if indexPath.row == movies.count - 3 && store.state.batch.totalPages > store.state.nextPage - 1 {
+            store.send(event: .fetchNext)
+        }
     }
 }
 

@@ -10,13 +10,14 @@ import UIKit
 class SelectedMovieViewController: UIViewController {
     
     //MARK: - Properties
-    private let movie: Movie?
+    private let movie: Movie
     
     private lazy var movieTableView: UITableView = {
         let tableView = UITableView()
         tableView.dataSource = self
         tableView.backgroundColor = .clear
-        tableView.register(SelectedMovieCell.self, forCellReuseIdentifier: SelectedMovieCell.reuseId)
+        tableView.register(SelectedMovieCell.self, forCellReuseIdentifier: String(describing: SelectedMovieCell.self))
+        tableView.allowsSelection = false
         return tableView
     }()
     
@@ -33,12 +34,12 @@ class SelectedMovieViewController: UIViewController {
     }
     
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        fatalError(MovieConstants.FatalError.initError)
     }
     
     //MARK: - Private functions
     private func setupViews() {
-        title = movie?.title
+        title = movie.title
         view.backgroundColor = .black
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
         navigationController?.navigationBar.barTintColor = .black
@@ -60,8 +61,10 @@ extension SelectedMovieViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: SelectedMovieCell.reuseId, for: indexPath) as? SelectedMovieCell,
-              let movie = movie else {
+        guard let cell = tableView.dequeueReusableCell(
+            withIdentifier: String(describing: SelectedMovieCell.self),
+            for: indexPath
+        ) as? SelectedMovieCell else {
             return UITableViewCell()
         }
         cell.backgroundColor = .clear

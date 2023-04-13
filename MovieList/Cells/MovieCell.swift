@@ -11,9 +11,6 @@ import SDWebImage
 
 class MovieCell: UITableViewCell {
     
-    //MARK: - Static properties
-    static var reuseId = "MovieCell"
-    
     //MARK: - Private properties
     private lazy var infoStackView: UIStackView = {
         let stackView = UIStackView()
@@ -26,7 +23,7 @@ class MovieCell: UITableViewCell {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
-        imageView.image = UIImage(named: "noImage")
+        imageView.image = .noImage
         return imageView
     }()
     
@@ -64,7 +61,7 @@ class MovieCell: UITableViewCell {
     }
     
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        fatalError(MovieConstants.FatalError.initError)
     }
     
     //MARK: - Private functions
@@ -85,7 +82,7 @@ class MovieCell: UITableViewCell {
         moviePosterImageView.snp.makeConstraints { make in
             make.leading.top.bottom.equalToSuperview().inset(20)
             make.width.equalTo(80)
-            make.height.equalTo(90)
+            make.height.equalTo(100)
         }
         infoStackView.snp.makeConstraints { make in
             make.leading.equalTo(moviePosterImageView.snp.trailing).offset(20)

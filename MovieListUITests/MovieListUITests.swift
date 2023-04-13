@@ -5,51 +5,39 @@
 //  Created by Viktoryia Hermanovich on 4.04.23.
 //
 
-import XCTest
-import SnapshotTesting
-@testable import MovieList
+import iOSSnapshotTestCase
+import MovieList
 
-class MovieListUITests: XCTestCase {
-    
-    //MARK: - Properties
-    private (set) var viewController = MovieViewController()
-    
-    func testMovieViewController() {
-        let frame = CGRect(x: 0, y: 0, width: 375, height: 667)
-        viewController.view.frame = frame
-        testNoDataState()
-        testLoadingState()
-        testLoadedState()
-        testSelectedMovieState()
+class MovieListUITests: FBSnapshotTestCase {
+
+    private (set) var viewController: MovieViewController!
+
+    // MARK: - Lifecycle
+    override func setUp() {
+       super.setUp()
+        //recordMode = true
     }
-    
+
+    override func setUpWithError() throws {
+        try super.setUpWithError()
+        viewController = MovieViewController()
+    }
+
     //MARK: - Tests
-    private func testNoDataState() {
-        
+    func testNoDataState() {
+
         // Given
-        let state = MovieState(status: MovieState.Status.noData, movies: [], query: "")
-        
+        let state = MovieState.initial
+
         // When
         viewController.update(with: state)
-        
+
         // Then
-        assertSnapshot(matching: viewController, as: .image)
+        FBSnapshotVerifyViewController(viewController)
     }
-    
-    private func testLoadingState() {
-        
-        // Given
-        let state = MovieState(status: MovieState.Status.loading, movies: [], query: "")
-        
-        // When
-        viewController.update(with: state)
-        
-        // Then
-        assertSnapshot(matching: viewController, as: .image)
-    }
-    
-    private func testLoadedState() {
-        
+
+    func testLoadedState() {
+
         // Given
         let movies = [
             Movie(
@@ -62,40 +50,21 @@ class MovieListUITests: XCTestCase {
                 id: 2,
                 overview: "Test overview 2",
                 title: "Test movie 2",
-                posterPath: "Tset poster 2",
+                posterPath: "Test poster 32",
                 voteAverage: 2)
         ]
-        let state = MovieState(status: MovieState.Status.loaded, movies: movies, query: "")
-        
+        let state = MovieState(
+            status: MovieState.Status.loaded,
+            batch: MovieResults(page: MovieState.firstPage, results: movies),
+            movies: movies,
+            query: "",
+            nextPage:MovieState.firstPage
+        )
+
         // When
         viewController.update(with: state)
-        
+
         // Then
-        assertSnapshot(matching: viewController, as: .image)
-    }
-    
-    private func testSelectedMovieState() {
-        
-        // Given
-        let selectedMovie = Movie(
-            id: 2,
-            overview: "Test overview 2",
-            title: "Test movie 2",
-            posterPath: "Tset poster 2",
-            voteAverage: 2)
-        let movies = [ Movie(
-            id: 1,
-            overview: "Test overview 1",
-            title: "Test movie 1",
-            posterPath: "Test poster 1",
-            voteAverage: 1), selectedMovie
-        ]
-        let state = MovieState(selectedMovie: selectedMovie, status: MovieState.Status.selected, movies: movies, query: "")
-        
-        // When
-        viewController.update(with: state)
-        
-        // Then
-        assertSnapshot(matching: viewController, as: .image)
+        FBSnapshotVerifyViewController(viewController)
     }
 }

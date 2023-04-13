@@ -11,21 +11,21 @@ import XCTest
 class MovieIntentTests: XCTestCase {
     
     //MARK: - Properties
-    private (set) var sut: MovieIntent!
+    private (set) var intent: MovieIntent!
     private (set) var state: MovieState!
     private (set) var view: MovieViewControllerSpy!
     
     // MARK: - Lifecycle
     override func setUpWithError() throws {
         try super.setUpWithError()
-        sut = MovieIntent()
+        intent = MovieIntent()
         view = MovieViewControllerSpy()
-        state = MovieState(status: .loading, movies: [], query: "")
-        sut.bind(to: view)
+        state = MovieState(status: .loading, batch: MovieResults.empty, movies: [], query: "", nextPage: MovieState.firstPage)
+        intent.bind(to: view)
     }
     
     override func tearDownWithError() throws {
-        sut = nil
+        intent = nil
         view = nil
         state = nil
         try super.tearDownWithError()
@@ -35,10 +35,10 @@ class MovieIntentTests: XCTestCase {
     func testWhenLoadingMoviesFeedback() {
         
         // Given
-        let didLoadEvent: MovieEvent = .didLoad(MovieResults.empty())
+        let didLoadEvent: MovieEvent = .didLoad(MovieResults.empty)
         
         // Then
-        let feedback = sut.whenLoadingMovies()
+        let feedback = intent.whenLoadingMovies()
             .mapEvent { event in
                 XCTAssertEqual(event, didLoadEvent, "Should check didLoad event")
             }
@@ -50,8 +50,6 @@ class MovieIntentTests: XCTestCase {
         // Given
         let results = (MovieResults(
             page: 1,
-            totalResults: 1,
-            totalPages: 1,
             results: [Movie(
                 id: 1,
                 overview: "Test overview",
@@ -61,7 +59,7 @@ class MovieIntentTests: XCTestCase {
         let event: MovieEvent = .didLoad(results)
         
         // When
-        sut.reducer(state: &state, event: event)
+        intent.reducer(state: &state, event: event)
         
         // Then
         XCTAssertEqual(state.status, .loaded, "Should check state changed for loaded")
@@ -74,7 +72,7 @@ class MovieIntentTests: XCTestCase {
         let event: MovieEvent = .didFail
         
         // When
-        sut.reducer(state: &state, event: event)
+        intent.reducer(state: &state, event: event)
         
         // Then
         XCTAssertEqual(state.status, .noData, "Should check state changed for noData")
@@ -88,7 +86,7 @@ class MovieIntentTests: XCTestCase {
         let event: MovieEvent = .filter(with: query)
         
         // When
-        sut.reducer(state: &state, event: event)
+        intent.reducer(state: &state, event: event)
         
         // Then
         XCTAssertEqual(state.status, .loading, "Should check state changed for loaded")
@@ -108,11 +106,23 @@ class MovieIntentTests: XCTestCase {
         let event: MovieEvent = .select(movie)
         
         // When
-        sut.reducer(state: &state, event: event)
+        intent.reducer(state: &state, event: event)
         
         // Then
         XCTAssertEqual(state.status, .selected, "Should check that state changes for selected")
         XCTAssertEqual(state.selectedMovie, movie, "Should check that selected movies was set")
+    }
+    
+    func testReducerFetchNextEvent() {
+        
+        // Given
+        let event: MovieEvent = .fetchNext
+        
+        // When
+        intent.reducer(state: &state, event: event)
+        
+        // Then
+        XCTAssertEqual(state.status, .loading, "Should check that state changes for loading")
     }
 }
 

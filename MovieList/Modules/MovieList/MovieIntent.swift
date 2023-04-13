@@ -12,6 +12,8 @@ import CombineFeedbackUI
 
 protocol MovieIntentProtocol {
     func bind(to view: MovieListDisplay)
+    func whenLoadingMovies() -> Feedback<MovieState, MovieEvent>
+    func reducer(state: inout MovieState, event: MovieEvent)
 }
 
 final class MovieIntent {
@@ -25,12 +27,11 @@ final class MovieIntent {
         self.view = view
     }
     
-    //MARK: - Public functions
     func whenLoadingMovies() -> Feedback<MovieState, MovieEvent> {
         Feedback { state -> AnyPublisher<MovieEvent, Never> in
             if state.status == .loading {
                 return self.service
-                    .fetchMovies(for: state.query)
+                    .fetchMovies(for: state.query, page: state.nextPage)
                     .map(MovieEvent.didLoad)
                     .replaceError(with: MovieEvent.didFail)
                     .receive(on: DispatchQueue.main)
@@ -48,19 +49,25 @@ final class MovieIntent {
                 state.status = .noData
                 state.movies = []
             } else {
-                state.movies = movies.results
+                state.movies += movies.results
                 state.status = .loaded
+                state.batch = movies
+                state.nextPage = movies.page + 1
             }
         case .didFail:
             state.status = .noData
             state.movies = []
+            state.nextPage = MovieState.firstPage
         case .filter(let query):
             state.query = query
             state.movies = []
             state.status = .loading
+            state.nextPage = MovieState.firstPage
         case .select(let movie):
             state.selectedMovie = movie
             state.status = .selected
+        case .fetchNext:
+            state.status = .loading
         }
         view?.update(with: state)
     }

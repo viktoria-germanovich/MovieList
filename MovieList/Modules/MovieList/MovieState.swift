@@ -14,6 +14,18 @@ struct MovieState {
     }
     var selectedMovie: Movie?
     var status: Status
+    var batch: MovieResults
     var movies: [Movie]
     var query: String
+    var nextPage: Int
+    
+    static let firstPage: Int = 1
+    static let initial = MovieState(
+        selectedMovie: nil,
+        status: .loading,
+        batch: MovieResults.empty,
+        movies: [],
+        query: "",
+        nextPage: firstPage
+    )
 }

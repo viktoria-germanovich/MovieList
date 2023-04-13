@@ -10,9 +10,6 @@ import SDWebImage
 
 class SelectedMovieCell: UITableViewCell {
     
-    //MARK: - Static properties
-    static var reuseId = "SelectedMovieCell"
-    
     //MARK: - Constants
     private enum Constants {
         static let overviewTitle = "Overview"
@@ -23,7 +20,6 @@ class SelectedMovieCell: UITableViewCell {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
-        imageView.layer.cornerRadius = 30
         return imageView
     }()
     
@@ -53,7 +49,7 @@ class SelectedMovieCell: UITableViewCell {
     }
     
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        fatalError(MovieConstants.FatalError.initError)
     }
     
     //MARK: - Private functions

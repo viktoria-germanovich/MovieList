@@ -42,7 +42,7 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "C836F98E29D073BA0079A7E6"
+               BlueprintIdentifier = "C85B457729DCCEBC00E8E538"
                BuildableName = "MovieListUITests.xctest"
                BlueprintName = "MovieListUITests"
                ReferencedContainer = "container:MovieList.xcodeproj">
@@ -70,6 +70,18 @@
             ReferencedContainer = "container:MovieList.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <EnvironmentVariables>
+         <EnvironmentVariable
+            key = "FB_REFERENCE_IMAGE_DIR"
+            value = "$(SOURCE_ROOT)/MovieListUITests/ReferenceImages"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "IMAGE_DIFF_DIR"
+            value = "$(SOURCE_ROOT)/MovieListUITests/FailureDiffs"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+      </EnvironmentVariables>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
